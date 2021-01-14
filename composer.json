@@ -1,0 +1,26 @@
+{
+  "name": "levelcredit/tradeline-php",
+  "description": "LevelCredit Distributed Tradeline API Client Library for PHP",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "version": "1.0.0",
+  "require": {
+    "ext-json": "*",
+    "php": ">=7.1.3",
+    "psr/log": "^1.1",
+    "justinrainbow/json-schema": "5.2.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "LevelCredit\\Tradeline\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "8.*"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "LevelCredit\\Tradeline\\Tests\\": "tests/"
+    }
+  }
+}
