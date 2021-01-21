@@ -5,7 +5,6 @@ namespace LevelCredit\Tradeline\Model;
 class OrderResponse
 {
     /**
-     *
      * @var int will be encoded order ID returned by LevelCredit API
      */
     protected $id;
@@ -30,6 +29,13 @@ class OrderResponse
      */
     protected $createdAt;
 
+    /**
+     * @param int $id
+     * @param string $referenceId
+     * @param string $status
+     * @param string $amount
+     * @param \DateTime $createdAt
+     */
     public function __construct(int $id, string $referenceId, string $status, string $amount, \DateTime $createdAt)
     {
         $this->id = $id;
