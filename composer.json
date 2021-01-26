@@ -1,6 +1,6 @@
 {
   "name": "levelcredit/tradeline-php",
-  "description": "LevelCredit Tradeline API Client Library for PHP",
+  "description": "LevelCredit Tradeline SDK for PHP",
   "minimum-stability": "stable",
   "license": "MIT",
   "version": "1.0.0",
@@ -23,7 +23,7 @@
     "psr/log": "^1.1",
     "justinrainbow/json-schema": "5.2.*",
     "monolog/monolog": "2.*",
-    "levelcredit/levelcredit-api-php": "dev-master"
+    "levelcredit/levelcredit-api-php": "1.*"
   },
   "autoload": {
     "psr-4": {

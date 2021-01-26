@@ -13,11 +13,11 @@ use LevelCredit\Tradeline\Exception\TradelineResponseException;
 use LevelCredit\Tradeline\Mapping\AuthenticateResponseMapper;
 use LevelCredit\Tradeline\Model\AuthenticateResponse;
 use LevelCredit\Tradeline\Model\OrderResponse;
+use LevelCredit\Tradeline\Model\PaymentSourceDataRequest;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Psr\Log\NullLogger;
 
 class TradelineClient
 {
@@ -41,26 +41,18 @@ class TradelineClient
     /**
      * @var string
      */
-    protected $fileLogPath;
-
-    /**
-     * @var string
-     */
     protected $logLevel = LogLevel::DEBUG;
 
     /**
      * @param string $clientId your levelcredit client_id parameter
      * @param string $clientSecret your levelcredit client_secret parameter
-     * @param string $fileLogPath path for stream logs for internal logger
      * @param string|null $baseUrl by default will be use production levelcredit url
      */
     public function __construct(
         string $clientId = '',
         string $clientSecret = '',
-        string $fileLogPath = '',
         string $baseUrl = null
     ) {
-        $this->fileLogPath = $fileLogPath;
         $this->baseUrl = $baseUrl;
         $this->apiClient = LevelCreditApiClient::create($clientId, $clientSecret)
             ->addLogHandler(
@@ -71,14 +63,13 @@ class TradelineClient
     }
 
     /**
-     * @param string $clientId
-     * @param string $clientSecret
-     * @param string $fileLogPath
+     * @param string $clientId your levelcredit client_id parameter
+     * @param string $clientSecret your levelcredit client_secret parameter
      * @return static
      */
-    public static function create(string $clientId = '', string $clientSecret = '', string $fileLogPath = ''): self
+    public static function create(string $clientId = '', string $clientSecret = ''): self
     {
-        return new static($clientId, $clientSecret, $fileLogPath);
+        return new static($clientId, $clientSecret);
     }
 
     /**
@@ -93,9 +84,6 @@ class TradelineClient
     }
 
     /**
-     * Be careful on call this method in api client will be recreate DefaultLogHandler with default parameters
-     * @see DefaultLogHandler
-     *
      * @param LoggerInterface $logger
      * @return static
      */
@@ -106,19 +94,6 @@ class TradelineClient
         $this->apiClient->disableLogHandlers()->addLogHandler(
             DefaultLogHandler::create($this->logger)->setLogLevel($this->logLevel)
         );
-
-        return $this;
-    }
-
-    /**
-     * This method should use when you need build your api client with non default parameters or custom logging etc.
-     *
-     * @param LevelCreditApiClient $apiClient
-     * @return static
-     */
-    public function setApiClient(LevelCreditApiClient $apiClient): self
-    {
-        $this->apiClient = $apiClient;
 
         return $this;
     }
@@ -192,14 +167,14 @@ class TradelineClient
     /**
      * @param string $accessToken
      * @param string $syncDataJson
-     * @param string $paymentSourceDataJson
+     * @param PaymentSourceDataRequest $paymentSourceData
      * @return OrderResponse
      * @throws TradelineException
      */
     public function purchaseBackreporting(
         string $accessToken,
         string $syncDataJson,
-        string $paymentSourceDataJson
+        PaymentSourceDataRequest $paymentSourceData
     ): OrderResponse {
         throw new TradelineClientException('Not implemented yet');
     }
@@ -245,13 +220,9 @@ class TradelineClient
             return $this->logger;
         }
 
-        if ($this->fileLogPath) {
-            $this->logger = new Logger(__CLASS__);
-            $this->logger->pushHandler(new StreamHandler($this->fileLogPath, $this->logLevel));
+        $this->logger = new Logger(__CLASS__);
+        $this->logger->pushHandler(new StreamHandler('php://stdout', $this->logLevel));
 
-            return $this->logger;
-        }
-
-        return $this->logger = new NullLogger();
+        return $this->logger;
     }
 }

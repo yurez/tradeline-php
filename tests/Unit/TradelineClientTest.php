@@ -10,11 +10,14 @@ use LevelCredit\LevelCreditApi\Model\Response\Resource\AccessToken;
 use LevelCredit\Tradeline\Exception\TradelineClientException;
 use LevelCredit\Tradeline\Exception\TradelineResponseException;
 use LevelCredit\Tradeline\Model\AuthenticateResponse;
+use LevelCredit\Tradeline\Tests\Helper\WriteAttributeExtensionTrait;
 use LevelCredit\Tradeline\TradelineClient;
 use PHPUnit\Framework\TestCase;
 
 class TradelineClientTest extends TestCase
 {
+    use WriteAttributeExtensionTrait;
+
     /**
      * @test
      */
@@ -48,7 +51,7 @@ class TradelineClientTest extends TestCase
             ->method('getAccessTokenByRefreshToken')
             ->willThrowException(new ClientException('Some error on http request'));
 
-        TradelineClient::create()->setApiClient($apiClientMock)->authenticate('some_refresh_token');
+        $this->setApiClient(TradelineClient::create(), $apiClientMock)->authenticate('some_refresh_token');
     }
 
     /**
@@ -65,7 +68,8 @@ class TradelineClientTest extends TestCase
             ->method('getAccessTokenByUsernamePassword')
             ->willThrowException(new ClientException('Some error on http request'));
 
-        TradelineClient::create()->setApiClient($apiClientMock)->authenticate('some_username', 'some_password');
+        $this->setApiClient(TradelineClient::create(), $apiClientMock)
+            ->authenticate('some_username', 'some_password');
     }
 
     /**
@@ -124,8 +128,7 @@ class TradelineClientTest extends TestCase
             ->with('some_refresh_token')
             ->willReturn($apiResponseMock);
 
-        $result = TradelineClient::create()
-            ->setApiClient($apiClientMock)
+        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
             ->authenticate('client_id', 'client_secret', 'some_refresh_token');
 
         $this->assertInstanceOf(AuthenticateResponse::class, $result);
@@ -180,8 +183,7 @@ class TradelineClientTest extends TestCase
             ->with('some_new_refresh_token')
             ->willReturn($apiResponseMock);
 
-        $result = TradelineClient::create()
-            ->setApiClient($apiClientMock)
+        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
             ->authenticate('some_new_refresh_token');
 
         $this->assertInstanceOf(AuthenticateResponse::class, $result);
@@ -227,8 +229,7 @@ class TradelineClientTest extends TestCase
             ->with('some_new_refresh_token')
             ->willReturn($apiResponseMock);
 
-        $result = TradelineClient::create()
-            ->setApiClient($apiClientMock)
+        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
             ->authenticate('some_new_refresh_token');
     }
 
@@ -288,8 +289,7 @@ class TradelineClientTest extends TestCase
             ->with('some_username', 'some_password')
             ->willReturn($apiResponseMock);
 
-        $result = TradelineClient::create()
-            ->setApiClient($apiClientMock)
+        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
             ->authenticate('client_id', 'client_secret', 'some_username', 'some_password');
 
         $this->assertInstanceOf(AuthenticateResponse::class, $result);
@@ -344,8 +344,7 @@ class TradelineClientTest extends TestCase
             ->with('some_username', 'some_password')
             ->willReturn($apiResponseMock);
 
-        $result = TradelineClient::create()
-            ->setApiClient($apiClientMock)
+        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
             ->authenticate('some_username', 'some_password');
 
         $this->assertInstanceOf(AuthenticateResponse::class, $result);
@@ -391,8 +390,20 @@ class TradelineClientTest extends TestCase
             ->with('some_username', 'some_password')
             ->willReturn($apiResponseMock);
 
-        $result = TradelineClient::create()
-            ->setApiClient($apiClientMock)
+        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
             ->authenticate('some_username', 'some_password');
+    }
+
+    /**
+     * @param TradelineClient $client
+     * @param LevelCreditApiClient $apiClient
+     * @return TradelineClient
+     * @throws \ReflectionException
+     */
+    protected function setApiClient(TradelineClient $client, LevelCreditApiClient $apiClient): TradelineClient
+    {
+        $this->writeAttribute($client, 'apiClient', $apiClient);
+
+        return $client;
     }
 }
