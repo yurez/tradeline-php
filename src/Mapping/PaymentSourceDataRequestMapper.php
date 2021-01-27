@@ -78,7 +78,7 @@ class PaymentSourceDataRequestMapper
             case $paymentAccount instanceof BankAccount:
                 $paymentSource->setBank(
                     ApiBankAccount::create()
-                        ->setAccount(preg_replace('/[^0-9]/', $paymentAccount->getAccountNumber()))
+                        ->setAccount(preg_replace('/[^0-9]/', '', $paymentAccount->getAccountNumber()))
                         ->setRouting($paymentAccount->getRoutingNumber())
                         ->setType(static::mapBankAccountType($paymentAccount->getBankAccountType()))
                 );
@@ -86,7 +86,7 @@ class PaymentSourceDataRequestMapper
             case $paymentAccount instanceof CreditCardAccount:
             case $paymentAccount instanceof DebitCardAccount:
                 $apiCardAccount = ApiCardAccount::create()
-                    ->setAccount(preg_replace('/[^0-9]/', $paymentAccount->getAccountNumber()))
+                    ->setAccount(preg_replace('/[^0-9]/', '', $paymentAccount->getAccountNumber()))
                     ->setExpiration($paymentAccount->getExpirationDate()->format('Y-m'))
                     ->setCvv($paymentAccount->getSecurityCode());
                 if ($paymentAccount->getType() === PaymentAccountType::CREDIT_CARD) {
