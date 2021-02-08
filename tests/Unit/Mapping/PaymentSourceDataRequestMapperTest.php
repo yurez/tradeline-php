@@ -1,6 +1,6 @@
 <?php
 
-namespace LevelCredit\Tradeline\Tests\Unit;
+namespace LevelCredit\Tradeline\Tests\Unit\Mapping;
 
 use LevelCredit\Tradeline\Enum\BankAccountType;
 use LevelCredit\Tradeline\Enum\PaymentAccountType;
@@ -351,82 +351,6 @@ class PaymentSourceDataRequestMapperTest extends TestCase
         $this->assertEquals('64376437434378', $bankAccount["\0*\0account"]);
         $this->assertEquals('07888983', $bankAccount["\0*\0routing"]);
         $this->assertEquals(ApiBankAccountType::CHECKING, $bankAccount["\0*\0type"]);
-    }
-
-    /**
-     * @test
-     */
-    public function shouldMapBusinessCheckingBankPaymentSourceDataToApiPaymentSource(): void
-    {
-        $paymentAccountMock = $this->createMock(BankAccount::class);
-        $paymentAccountMock
-            ->expects($this->once())
-            ->method('getHolderName')
-            ->willReturn('Some H. Name');
-        $paymentAccountMock
-            ->expects($this->once())
-            ->method('getType')
-            ->willReturn(PaymentAccountType::BANK);
-        $paymentAccountMock
-            ->expects($this->once())
-            ->method('getAccountNumber')
-            ->willReturn('64376437-4343-78');
-        $paymentAccountMock
-            ->expects($this->once())
-            ->method('getRoutingNumber')
-            ->willReturn('07888983');
-        $paymentAccountMock
-            ->expects($this->once())
-            ->method('getBankAccountType')
-            ->willReturn(BankAccountType::BUSINESS_CHECKING);
-
-        $addressMock = $this->createMock(PaymentAccountAddress::class);
-        $addressMock
-            ->expects($this->once())
-            ->method('getStreet')
-            ->willReturn('123 Street');
-        $addressMock
-            ->expects($this->once())
-            ->method('getCity')
-            ->willReturn('Test City');
-        $addressMock
-            ->expects($this->once())
-            ->method('getState')
-            ->willReturn('TS');
-        $addressMock
-            ->expects($this->once())
-            ->method('getZip')
-            ->willReturn('99999');
-
-        $paymentSourceDataMock = $this->createMock(PaymentSourceDataRequest::class);
-        $paymentSourceDataMock
-            ->expects($this->any())
-            ->method('getPaymentAccount')
-            ->willReturn($paymentAccountMock);
-        $paymentSourceDataMock
-            ->expects($this->any())
-            ->method('getAddress')
-            ->willReturn($addressMock);
-
-        $result = (array)PaymentSourceDataRequestMapper::map($paymentSourceDataMock);
-
-        $this->assertEquals(ApiPaymentAccountType::BANK, $result["\0*\0type"]);
-        $this->assertEquals('Some H. Name', $result["\0*\0name"]);
-        $this->assertNull($result["\0*\0debitCard"]);
-        $this->assertNull($result["\0*\0card"]);
-
-        $address = (array)$result["\0*\0address"];
-
-        $this->assertEquals('123 Street', $address["\0*\0street"]);
-        $this->assertEquals('Test City', $address["\0*\0city"]);
-        $this->assertEquals('TS', $address["\0*\0state"]);
-        $this->assertEquals('99999', $address["\0*\0zip"]);
-
-        $bankAccount = (array)$result["\0*\0bank"];
-
-        $this->assertEquals('64376437434378', $bankAccount["\0*\0account"]);
-        $this->assertEquals('07888983', $bankAccount["\0*\0routing"]);
-        $this->assertEquals(ApiBankAccountType::BUSINESS_CHECKING, $bankAccount["\0*\0type"]);
     }
 
     /**

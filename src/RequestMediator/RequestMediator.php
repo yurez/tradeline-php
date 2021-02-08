@@ -1,6 +1,6 @@
 <?php
 
-namespace LevelCredit\Tradeline\RequestHandler;
+namespace LevelCredit\Tradeline\RequestMediator;
 
 use LevelCredit\LevelCreditApi\Enum\TradelineSyncType;
 use LevelCredit\LevelCreditApi\Enum\UserEmbeddedEntities;
@@ -28,7 +28,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
 
-class RequestHandler
+class RequestMediator
 {
     private const FAILED_STATUS_ENTRY_POINT = 400;
 
@@ -242,7 +242,9 @@ class RequestHandler
         try {
             $response = $this->apiClient->addDataToTradelineSync($syncId, $syncDataJson, $accessToken);
         } catch (LevelCreditApiException $e) {
-            $this->getLogger()->error($message = 'Get error on add data to tradeline sync request: ' . $e->getMessage());
+            $this->getLogger()->error(
+                $message = 'Get error on add data to tradeline sync request: ' . $e->getMessage()
+            );
 
             throw new TradelineClientException($message);
         }

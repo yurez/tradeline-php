@@ -2,7 +2,7 @@
 
 ## Installation
 
-Install the latest version with
+Install the latest version use [composer](https://getcomposer.org) with
 
 ```bash
 $ composer require levelcredit/tradeline-php 
@@ -14,12 +14,12 @@ $ composer require levelcredit/tradeline-php
 <?php
 
 use LevelCredit\Tradeline\TradelineClient;
-use LevelCredit\Tradeline\Exception\TradelineException
+use LevelCredit\Tradeline\Exception\TradelineException;
 use LevelCredit\Tradeline\Model\PaymentSourceDataRequest;
 use LevelCredit\Tradeline\Model\SubModel\CreditCardAccount;
 use LevelCredit\Tradeline\Model\SubModel\PaymentAccountAddress;
 
-$client = TradelineClient::create('<YOUR_CLIENT_ID>', '<YOUR_CLIENT_SECRET>')
+$client = TradelineClient::create(getenv('CLIENT_ID'), getenv('CLIENT_SECRET'))
 //     ->setLogger(\Psr\Log\LoggerInterface $logger) // pass logger if need by default logs will be put to php://stdout
 //     ->setBaseUrl(string $yourUrlHere) // pass base url if need by default use production level credit url   
 ;
@@ -35,7 +35,7 @@ $syncDataJson = <<<JSON
     "birthdate" : "YYYY-MM-DD", //required
     "ssn" : "NNN-NN-NNNN", //required
     "email" : "RitaR@example.com", //required
-    "mobile" : "NNN-NN-NNNN", //optional
+    "mobile" : "NNNNNNNNNN", //optional
  
     "external_lease_id" : "<external_lease_id>", //required
     "external_property_id" : "", //optional
@@ -59,7 +59,7 @@ $syncDataJson = <<<JSON
 JSON;
 
 try {
-    $authResponse = $client->authenticate('<YOUR_USERNAME>', '<YOUR_PASSWORD>');
+    $authResponse = $client->authenticate(getenv('PARTNER_USERNAME'), getenv('PARTNER_PASSWORD'));
     
     $orderResponse = $client->purchaseBackreporting(
         $authResponse->getAccessToken(), 
@@ -85,4 +85,25 @@ try {
 } catch (TradelineException $e) {
    // processing errors
 }
+```
+
+## Running the Tests
+
+Install the [Composer](http://getcomposer.org/) all dependencies:
+
+```bash
+$ php composer.phar install
+```
+
+To run **the Unit test suite**, go to the project root and run:
+
+```bash
+$ php ./bin/phpunit --testsuite="Tradeline lib Unit Test Suite"
+```
+
+To run **the Functional test suite**, copy `.env.example` file to `.env` and fill parameters.  
+Go to the project root and run:
+
+```bash
+$ php ./bin/phpunit --testsuite="Tradeline lib Functional Test Suite"
 ```

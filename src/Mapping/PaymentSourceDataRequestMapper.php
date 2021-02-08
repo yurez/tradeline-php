@@ -111,8 +111,6 @@ class PaymentSourceDataRequestMapper
                 return ApiBankAccountType::CHECKING;
             case BankAccountType::SAVINGS:
                 return ApiBankAccountType::SAVINGS;
-            case BankAccountType::BUSINESS_CHECKING:
-                return ApiBankAccountType::BUSINESS_CHECKING;
             default:
                 return '';
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace LevelCredit\Tradeline\Tests\Unit;
+namespace LevelCredit\Tradeline\Tests\Unit\RequestMediator;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use LevelCredit\LevelCreditApi\Enum\TradelineSyncType;
@@ -36,12 +36,12 @@ use LevelCredit\Tradeline\Model\SubModel\BankAccount;
 use LevelCredit\Tradeline\Model\SubModel\CreditCardAccount;
 use LevelCredit\Tradeline\Model\SubModel\DebitCardAccount;
 use LevelCredit\Tradeline\Model\SubModel\PaymentAccountAddress;
-use LevelCredit\Tradeline\RequestHandler\RequestHandler;
+use LevelCredit\Tradeline\RequestMediator\RequestMediator;
 use LevelCredit\Tradeline\Tests\Helper\WriteAttributeExtensionTrait;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class RequestHandlerTest extends TestCase
+class RequestMediatorTest extends TestCase
 {
     use WriteAttributeExtensionTrait;
 
@@ -62,7 +62,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiClientMock);
 
         $this
-            ->setApiClient(new RequestHandler(), $apiClientMock)
+            ->setApiClient(new RequestMediator(), $apiClientMock)
             ->setLogger($this->createMock(LoggerInterface::class));
     }
 
@@ -79,7 +79,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiClientMock);
 
         $this
-            ->setApiClient(new RequestHandler(), $apiClientMock)
+            ->setApiClient(new RequestMediator(), $apiClientMock)
             ->setBaseUri('http//new.base.uri');
     }
 
@@ -96,7 +96,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiClientMock);
 
         $this
-            ->setApiClient(new RequestHandler(), $apiClientMock)
+            ->setApiClient(new RequestMediator(), $apiClientMock)
             ->setAccessToken('some_access_token');
     }
 
@@ -132,7 +132,7 @@ class RequestHandlerTest extends TestCase
             ->willThrowException(new ClientException('Some error on http request'));
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getAccessTokenByUsernamePassword('some_username', 'some_password', 'client_id', 'client_secret');
     }
 
@@ -190,9 +190,8 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getAccessTokenByUsernamePassword('some_username', 'some_password', 'client_id', 'client_secret');
-
     }
 
     /**
@@ -258,7 +257,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $result = $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getAccessTokenByUsernamePassword('some_username', 'some_password', 'client_id', 'client_secret');
 
         $this->assertInstanceOf(AuthenticateResponse::class, $result);
@@ -322,7 +321,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $result = $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getAccessTokenByUsernamePassword('some_username', 'some_password');
 
         $this->assertInstanceOf(AuthenticateResponse::class, $result);
@@ -363,7 +362,7 @@ class RequestHandlerTest extends TestCase
             ->willThrowException(new ClientException('Some error on http request'));
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getAccessTokenByRefreshToken('some_refresh_token', 'client_id', 'client_secret');
     }
 
@@ -421,7 +420,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getAccessTokenByRefreshToken('some_refresh_token', 'client_id', 'client_secret');
     }
 
@@ -488,7 +487,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $result = $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getAccessTokenByRefreshToken('some_refresh_token', 'client_id', 'client_secret');
 
         $this->assertInstanceOf(AuthenticateResponse::class, $result);
@@ -552,7 +551,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $result = $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getAccessTokenByRefreshToken('some_refresh_token');
 
         $this->assertInstanceOf(AuthenticateResponse::class, $result);
@@ -580,7 +579,7 @@ class RequestHandlerTest extends TestCase
             ->willThrowException(new ClientException('Some error on http request'));
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->createTradelineSync();
     }
 
@@ -622,7 +621,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->createTradelineSync('invalid_access_token');
     }
 
@@ -673,7 +672,7 @@ class RequestHandlerTest extends TestCase
         $this->assertEquals(
             123,
             $this
-                ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+                ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
                 ->createTradelineSync()
         );
     }
@@ -698,7 +697,7 @@ class RequestHandlerTest extends TestCase
             ->willThrowException(new ClientException('Some error on http request'));
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->addDataToTradelineSync(123, '{"some": "data"}');
     }
 
@@ -741,7 +740,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->addDataToTradelineSync(123, '{"some": "data"}', 'valid_access_token');
     }
 
@@ -781,7 +780,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->addDataToTradelineSync(123, '{"some": "data"}');
     }
 
@@ -805,7 +804,7 @@ class RequestHandlerTest extends TestCase
             ->willThrowException(new ClientException('Some error on http request'));
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->startTradelineSync(123);
     }
 
@@ -848,7 +847,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->startTradelineSync(123, 'valid_access_token');
     }
 
@@ -888,7 +887,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->startTradelineSync(123);
     }
 
@@ -915,7 +914,7 @@ class RequestHandlerTest extends TestCase
             ->willThrowException(new ClientException('Some error on http request'));
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getSubscriptionResourceUrlByUserEmail('email@email.com');
     }
 
@@ -959,7 +958,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getSubscriptionResourceUrlByUserEmail('invalid#email', 'valid_access_token');
     }
 
@@ -1013,7 +1012,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getSubscriptionResourceUrlByUserEmail('email@email.com');
     }
 
@@ -1083,7 +1082,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->getSubscriptionResourceUrlByUserEmail('email@email.com');
     }
 
@@ -1162,7 +1161,7 @@ class RequestHandlerTest extends TestCase
         $this->assertEquals(
             'http://some.url/resource_subscription/123',
             $this
-                ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+                ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
                 ->getSubscriptionResourceUrlByUserEmail('email@email.com')
         );
     }
@@ -1197,7 +1196,7 @@ class RequestHandlerTest extends TestCase
             ->willThrowException(new ClientException('Some error on http request'));
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->payProduct('productCode', 1.01, 'http://some.url/url/1', $paymentSourceData);
     }
 
@@ -1250,7 +1249,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->payProduct('productCode', 1.01, 'http://some.url/url/1', $paymentSourceData, 'valid_access_token');
     }
 
@@ -1326,7 +1325,7 @@ class RequestHandlerTest extends TestCase
             ->willReturn($apiResponseMock);
 
         $orderResponse = $this
-            ->setApiClient(new RequestHandler('main_client_id', 'main_client_secret'), $apiClientMock)
+            ->setApiClient(new RequestMediator('main_client_id', 'main_client_secret'), $apiClientMock)
             ->payProduct('productCode', 1.01, 'http://some.url/url/1', $paymentSourceData, 'valid_access_token');
 
         $this->assertInstanceOf(OrderResponse::class, $orderResponse);
@@ -1353,12 +1352,12 @@ class RequestHandlerTest extends TestCase
     }
 
     /**
-     * @param RequestHandler $requestHandler
+     * @param RequestMediator $requestHandler
      * @param LevelCreditApiClient $apiClient
-     * @return RequestHandler
+     * @return RequestMediator
      * @throws \ReflectionException
      */
-    protected function setApiClient(RequestHandler $requestHandler, LevelCreditApiClient $apiClient): RequestHandler
+    protected function setApiClient(RequestMediator $requestHandler, LevelCreditApiClient $apiClient): RequestMediator
     {
         $this->writeAttribute($requestHandler, 'apiClient', $apiClient);
 

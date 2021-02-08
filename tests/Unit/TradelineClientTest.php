@@ -9,7 +9,7 @@ use LevelCredit\Tradeline\Model\OrderResponse;
 use LevelCredit\Tradeline\Model\PaymentSourceDataRequest;
 use LevelCredit\Tradeline\Model\SubModel\BankAccount;
 use LevelCredit\Tradeline\Model\SubModel\PaymentAccountAddress;
-use LevelCredit\Tradeline\RequestHandler\RequestHandler;
+use LevelCredit\Tradeline\RequestMediator\RequestMediator;
 use LevelCredit\Tradeline\Tests\Helper\WriteAttributeExtensionTrait;
 use LevelCredit\Tradeline\TradelineClient;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +24,7 @@ class TradelineClientTest extends TestCase
      */
     public function shouldSetLoggerForRequestHandlerOnSetLogger(): void
     {
-        $handlerMock = $this->createMock(RequestHandler::class);
+        $handlerMock = $this->createMock(RequestMediator::class);
         $handlerMock
             ->expects($this->once())
             ->method('setLogger')
@@ -40,7 +40,7 @@ class TradelineClientTest extends TestCase
      */
     public function shouldSetBaseUriForRequestHandlerOnSetBaseUrl(): void
     {
-        $handlerMock = $this->createMock(RequestHandler::class);
+        $handlerMock = $this->createMock(RequestMediator::class);
         $handlerMock
             ->expects($this->once())
             ->method('setBaseUri')
@@ -75,7 +75,7 @@ class TradelineClientTest extends TestCase
      */
     public function shouldGetAccessTokenByClientIdClientSecretRefreshTokenOnAuthenticate(): void
     {
-        $handlerMock = $this->createMock(RequestHandler::class);
+        $handlerMock = $this->createMock(RequestMediator::class);
         $handlerMock
             ->expects($this->once())
             ->method('getAccessTokenByRefreshToken')
@@ -100,7 +100,7 @@ class TradelineClientTest extends TestCase
      */
     public function shouldGetAccessTokenByRefreshTokenOnAuthenticate(): void
     {
-        $handlerMock = $this->createMock(RequestHandler::class);
+        $handlerMock = $this->createMock(RequestMediator::class);
         $handlerMock
             ->expects($this->once())
             ->method('getAccessTokenByRefreshToken')
@@ -125,7 +125,7 @@ class TradelineClientTest extends TestCase
      */
     public function shouldGetAccessTokenByClientIdClientSecretUsernamePasswordOnAuthenticate(): void
     {
-        $handlerMock = $this->createMock(RequestHandler::class);
+        $handlerMock = $this->createMock(RequestMediator::class);
         $handlerMock
             ->expects($this->once())
             ->method('getAccessTokenByUsernamePassword')
@@ -151,7 +151,7 @@ class TradelineClientTest extends TestCase
      */
     public function shouldGetAccessTokenByUsernamePasswordOnAuthenticate(): void
     {
-        $handlerMock = $this->createMock(RequestHandler::class);
+        $handlerMock = $this->createMock(RequestMediator::class);
         $handlerMock
             ->expects($this->once())
             ->method('getAccessTokenByUsernamePassword')
@@ -180,14 +180,14 @@ class TradelineClientTest extends TestCase
         $this->expectException(TradelineInvalidArgumentException::class);
         $this->expectExceptionMessage('Email should be present in sync data.');
 
-        $handlerMock = $this->createMock(RequestHandler::class);
+        $handlerMock = $this->createMock(RequestMediator::class);
 
         $this->setRequestHandler(TradelineClient::create(), $handlerMock)
             ->purchaseBackreporting(
                 'some_access_token',
                 '{"some":"data"}',
                 PaymentSourceDataRequest::create(
-                    BankAccount::create('holderName', 123678, '0557758', BankAccountType::BUSINESS_CHECKING),
+                    BankAccount::create('holderName', 123678, '0557758', BankAccountType::CHECKING),
                     PaymentAccountAddress::create('123 Test str.', 'Test City', 'TS', '99999')
                 )
             );
@@ -199,11 +199,11 @@ class TradelineClientTest extends TestCase
     public function shouldReturnOrderResponseOnPurchaseBackreporting(): void
     {
         $paymentSourceData = PaymentSourceDataRequest::create(
-            BankAccount::create('holderName', 123678, '0557758', BankAccountType::BUSINESS_CHECKING),
+            BankAccount::create('holderName', 123678, '0557758', BankAccountType::SAVINGS),
             PaymentAccountAddress::create('123 Test str.', 'Test City', 'TS', '99999')
         );
 
-        $handlerMock = $this->createMock(RequestHandler::class);
+        $handlerMock = $this->createMock(RequestMediator::class);
         $handlerMock
             ->expects($this->once())
             ->method('setAccessToken')
@@ -253,11 +253,11 @@ class TradelineClientTest extends TestCase
 
     /**
      * @param TradelineClient $client
-     * @param RequestHandler $handler
+     * @param RequestMediator $handler
      * @return TradelineClient
      * @throws \ReflectionException
      */
-    protected function setRequestHandler(TradelineClient $client, RequestHandler $handler): TradelineClient
+    protected function setRequestHandler(TradelineClient $client, RequestMediator $handler): TradelineClient
     {
         $this->writeAttribute($client, 'requestHandler', $handler);
 

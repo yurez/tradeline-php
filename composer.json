@@ -21,7 +21,6 @@
     "php": "^7.3 || ^8.0",
     "ext-json": "*",
     "psr/log": "^1.1",
-    "justinrainbow/json-schema": "5.2.*",
     "monolog/monolog": "2.*",
     "levelcredit/levelcredit-api-php": "1.*"
   },
@@ -31,7 +30,12 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "8.*"
+    "phpunit/phpunit": "8.*",
+    "vlucas/phpdotenv": "5.*",
+    "fakerphp/faker": "^1.10"
+  },
+  "config": {
+    "bin-dir": "bin"
   },
   "autoload-dev": {
     "psr-4": {

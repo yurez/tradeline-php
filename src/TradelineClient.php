@@ -7,7 +7,7 @@ use LevelCredit\Tradeline\Exception\TradelineInvalidArgumentException;
 use LevelCredit\Tradeline\Model\AuthenticateResponse;
 use LevelCredit\Tradeline\Model\OrderResponse;
 use LevelCredit\Tradeline\Model\PaymentSourceDataRequest;
-use LevelCredit\Tradeline\RequestHandler\RequestHandler;
+use LevelCredit\Tradeline\RequestMediator\RequestMediator;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -30,7 +30,7 @@ class TradelineClient
     protected $logger;
 
     /**
-     * @var RequestHandler
+     * @var RequestMediator
      */
     protected $requestHandler;
 
@@ -44,7 +44,7 @@ class TradelineClient
         string $clientSecret = '',
         string $baseUrl = null
     ) {
-        $this->requestHandler = new RequestHandler($clientId, $clientSecret, $baseUrl);
+        $this->requestHandler = new RequestMediator($clientId, $clientSecret, $baseUrl);
         $this->requestHandler->setLogger($this->getLogger());
     }
 
