@@ -2,8 +2,8 @@
   "name": "levelcredit/tradeline-php",
   "description": "LevelCredit Tradeline SDK for PHP",
   "minimum-stability": "stable",
-  "license": "MIT",
-  "version": "1.0.0",
+  "license": "proprietary",
+  "version": "0.0.1",
   "authors": [
     {
       "name": "Yuriy Borovchuk",
@@ -22,7 +22,7 @@
     "ext-json": "*",
     "psr/log": "^1.1",
     "monolog/monolog": "2.*",
-    "levelcredit/levelcredit-api-php": "1.*"
+    "levelcredit/levelcredit-api-php": "0.*"
   },
   "autoload": {
     "psr-4": {

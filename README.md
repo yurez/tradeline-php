@@ -107,3 +107,8 @@ Go to the project root and run:
 ```bash
 $ php ./bin/phpunit --testsuite="Tradeline lib Functional Test Suite"
 ```
+
+
+### License
+
+LevelCredit Tradeline SDK is licensed under the Proprietary License - see the [LICENSE](LICENSE) file for details

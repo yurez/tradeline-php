@@ -1,0 +1,126 @@
+RentTrack API Terms of Use
+
+Last Updated: February 8, 2021
+
+PLEASE READ THESE TERMS OF USE CAREFULLY BEFORE USING AN API OFFERED BY RENTTRACK, INC. ("RENTTRACK").
+
+By accessing or using any application programming interfaces offered by RentTrack, including all elements of RentTrack’s software development kit (e.g. RentTrack provided libraries and sample code) via the www.renttrack.com or www.levelcredit.com websites or otherwise obtained from RentTrack (collectively, the "API" or "RentTrack API"), you and, if applicable, the company you represent (collectively, "you" or "your") agree to be bound by these API Terms of Use (the "Agreement"). This Agreement is a legal contract between you and RentTrack. If you do not have the authority to enter this Agreement, or if you do not agree with the Agreement, you may not access or use the API.
+
+RentTrack may revise and update this Agreement time to time in its sole discretion. All changes are effective immediately when RentTrack post them and apply to all access to and use of the API thereafter. Your continued use of the API following the posting of a revised Agreement means that you accept and agree to the changes. You are expected to check this page from time to time so you are aware of any changes, as they are binding on you.
+
+This Agreement is not intended to replace or otherwise affect any other Agreement between you and RentTrack, including any commercial contract or RentTrack’s other policies and agreements including, but not limited to, RentTrack’s Privacy Policy and other Terms of Use for RentTrack services.
+
+1. Definitions
+
+“API” or “RentTrack API” has the meaning set forth in the introductory paragraph of this Agreement.
+
+"Application" means any application that you develop using the RentTrack API to utilize the RentTrack Services.
+
+"Personal Data" means any personal data or personal information (or analogous term) as defined under applicable privacy and data protection laws.
+
+“RentTrack Content” means intellectual property owned or licensed by RentTrack; including RentTrack’s trademarks and logos, computer code used in the RentTrack Service, and Personal Data of Subscribers obtained through the RentTrack Service.
+
+"RentTrack Data" means any data or information RentTrack obtains or accesses from its customers and/or end users, including any Personal Data.
+
+"RentTrack Services" or "Services" means the services offered by RentTrack to landlords and tenants of residential rental units with respect to validating and reporting rent payments to one or more of the major credit bureaus; as well as RentTrack’s services in offering individuals the reporting to one or more of the major credit bureaus residential utility payments.
+
+"Subscriber" is defined as a residential renter utilizing the RentTrack Services that is subject to RentTrack’s then applicable Terms of Use and Privacy Policy.
+
+2. License
+Subject to the terms and conditions of this Agreement, RentTrack grants you a revocable, limited, non-exclusive, non-sublicensable, non-transferable license to access and use the API solely for the purpose of developing and testing your Application for integration with the RentTrack Services. RentTrack may revoke this license at any time for any reason. You will not, and will not permit any person, directly or indirectly, to reverse engineer, disassemble, reconstruct, decompile, translate, modify, copy, rent, modify, or alter, other than as explicitly permitted hereunder, create derivative works of the API or any other portion of the Service.
+
+3. Modifications
+RentTrack reserves the right to modify the Service or the API (or any part thereof) at any time in its sole discretion. Upon release of any new versions of the API, RentTrack reserves the right to require you to obtain and use the most recent version of the API in order to maintain functionality of your Application with the Service.
+
+4. Support
+RentTrack may, but is under no obligation to, provide basic technical support in connection with your use of the API. Any such support will be provided via web forums, FAQs, or other internet-based documentation made available to authorized developers in RentTrack’s sole discretion.
+
+5. Application Guidelines
+You may develop, display or distribute Applications that interact with the API. You agree that you are solely responsible for any Application that you develop, and that any such Application must comply with RentTrack Branding Guidelines, where applicable.
+
+6. API Call Limitations
+RentTrack may limit the number of API calls you are permitted to make during any given period. RentTrack will determine call limits based on various factors, including the ways your Applications may be used or the anticipated volume of use associated with your Applications. If you exceed the call limits established by RentTrack, we reserve the right to limit your access to the RentTrack Services.
+
+7. Ownership
+You acknowledge and agree that the Service, RentTrack Content, and the API are protected by applicable intellectual property laws and treaties (whether those rights happen to be registered or not, and wherever in the world those rights may exist). As between you and RentTrack, the Service, the RentTrack Content, including RentTrack’s trademarks and logos, and the API, together with any and all intellectual property rights contained in the foregoing, are and will at all times remain the sole and exclusive property of RentTrack. You agree that no time during or after the termination of this Agreement will you attempt to register any trademarks (including domain names) that are derived from or confusingly similar to those of RentTrack, or will you buy or otherwise arrange to use any such domains to redirect internet content to your site. All uses by you of RentTrack’s logos or trademarks shall inure to the sole benefit of RentTrack.
+
+8. Non-Permitted Purposes; API Restrictions
+You are responsible for your own conduct, and the conduct of any third party accessing the API on your behalf, while using the API and for any consequences thereof. You will use the API only for purposes that are legal, proper and in accordance with this Agreement and any applicable policies or guidelines provided by RentTrack, as they may be amended from time to time. You may not share your access credentials with any third party, including any RentTrack competitor or otherwise enable a RentTrack competitor to have access. In addition to the other restrictions contained herein, you agree that when using the API, you will not do the following, attempt to do the following, or permit your end users or other third parties to do the following:
+
+• Disparage RentTrack or knowingly tarnish the name, reputation, image or goodwill of RentTrack in connection with your Application or use of the API;
+• Modify, obscure, circumvent, or disable any element of the API or its access control features;
+• Extract, provide or otherwise use any data elements from the RentTrack Data to enhance the data files of third parties;
+• Use the API in a product or service that competes with products or services offered by RentTrack, including the Service;
+• Attempt to or circumvent any security measures or technical limitations of the API or the Service;
+• Use the API in any manner or for any purpose that violates any law or regulation, any right of any person, including but not limited to the intellectual property rights of such person, or any privacy and data protection laws, or to engage in activities that would violate any fiduciary relationship, any applicable local, state, federal, or international law, or any regulations having the force of law, or which otherwise may be harmful, in RentTrack’s sole discretion, to RentTrack, its providers, or Subscribers or end users of the Service;
+• Sell, lease, or sublicense the API or access thereto;
+• Use the API in a manner that detrimentally affects the stability of RentTrack’s servers or the behavior of other applications using the API;
+• Create or disclose metrics about, or perform any statistical analysis of, the API or the Service;
+• Use the API on behalf of any third party;
+• Make API calls exceeding a reasonable amount per day, as determined in RentTrack’s sole discretion and in accordance with this Agreement;
+• Frame, crawl, screen scrape, extract, or data mine RentTrack Content or RentTrack Data;
+• Use any robot, spider, site search/retrieval application, or other device to retrieve or index any portion of the Service or collect information about Subscribers or users of the Service for any unauthorized purpose;
+• Use the API to aggregate, consolidate or otherwise arrange, display or make available RentTrack Content or RentTrack Data in combination with any third party or any RentTrack competitors’ content or data, for any commercial purpose or in any manner that RentTrack determines could diminish the value or integrity of its business or brand;
+• Use the API in an Application containing any of the following content: adult content; pyramid schemes, chain letters or disruptive commercial messages or advertisements; infringing, or obscene content; content promoting or instructing about illegal activities or promoting physical harm or injury against any group or individual; content infringing any patent, trademark, copyright, trade secret or other proprietary right of any party; content defaming, abusing, harassing, stalking, threatening or violating any rights of privacy and/or publicity; content disparaging of RentTrack or its licensors, licensees, affiliates, or partners; or anything other inappropriate or unlawful content;
+• Transmit any viruses, worms, defects, Trojan horses, or other disabling code, via the API or otherwise, to Service or the computers or networks used by RentTrack, users or Subscribers of the Service or any other third parties;
+• Access RentTrack Data without the authorization of the RentTrack Subscriber or use RentTrack Data in any way beyond the purpose for which the Subscriber specifically provided you access under the agreement between you and the Subscriber. For the avoidance of doubt, this restriction is in addition to any other restrictions you agreed to with any applicable Subscriber to the Service;
+• Cache (in excess of 48 hours), collect, compile, store, transfer or utilize RentTrack Data or any other data derived from RentTrack, the Service or RentTrack's computer system(s) or database(s), including but not limited to cardholder data, customer addresses, passwords or any other Personal Data about any end user; or
+• Leverage or otherwise utilize RentTrack branded search terms for your own purposes.
+
+9. Service Providers
+You may work with third party service providers as necessary to facilitate your performance and obligations under this Agreement only if you require any such service provider to be bound by conditions and restrictions at least as protective of RentTrack and its Subscribers and users as set forth in this Agreement. You acknowledge and agree that you shall be fully responsible for any act or omission by any service provider you use to facilitate your performance or obligations hereunder. Any such act or omission that amounts to a breach of this Agreement will be deemed a breach by you.
+
+10. Integration of RentTrack’s Terms of Service and Privacy Policy
+To the extent that you offer the RentTrack Service to residential tenants or landlords directly, you agree that all Subscribers utilizing the RentTrack Services through your Application shall agree to be bound by RentTrack’s then current Terms of Service and Privacy Policy, and that your onboarding process for new Subscribers shall include a link to the appropriate URL displaying such Terms of Service and Privacy Policy.
+
+11. Right to Terminate
+      A.	Termination, Suspension, or Discontinuance. RentTrack reserves the right to suspend or terminate your API access at any time if: (a) we believe you have violated this Agreement (including the documents incorporated by reference) or, in our sole discretion, if we believe the availability of the APIs in your Application is not in our or our users' best interests; or (b) otherwise for any reason or no reason at all, without liability for such suspension or termination. We may also impose limits on certain features and services or restrict your access to some or all of the APIs or the content they provide. Such change, suspension or termination of the API may cause your existing services using the API to stop functioning properly. All of our rights herein may be exercised without prior notice or liability to you.
+
+      B.	Your Termination. You may terminate this Agreement by notifying RentTrack in writing of your intention to terminate your use of the API, ceasing use of the API and deleting your access credentials.
+      C.	Effect of Termination. Upon any termination of this Agreement, you will promptly (a) delete and remove all calls to the API from all web pages, scripts, widgets, applications, and other software in your possession or under your control; (b) destroy and remove any and all copies of the API from all computers, hard drives, networks and other storage media; and (c) upon request, certify in writing to RentTrack that such actions have been taken.
+
+12. Your Use of Third Party Services
+We may make available third party products or services, including, for example, third party applications, implementation and other consulting services ("Third Party Services"). Any use by you of such Third Party Services, and any exchange of data, including Personal Data, between you and the provider of such Third Party Services, is solely between you and the provider of such Third Party Services. Use of Third Party Services is at your own risk and RentTrack disclaims all liability related thereto. RentTrack does not warrant or support Third Party Services, whether or not they are designated as being "certified" or otherwise.
+
+13. Disclaimer of Any Warranty
+THE API, THE SERVICE AND ANY AND ALL RENTTRACK CONTENT AND RENTTRACK DATA ARE PROVIDED ON AN "AS IS" BASIS WITH ALL FAULTS. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, RENTTRACK AND ITS SUPPLIERS DISCLAIM ANY AND ALL REPRESENTATIONS AND WARRANTIES RELATING TO THE API, THE SERVICE, RENTTRACK CONTENT, RENTTRACK DATA, AND ANY OTHER SERVICES PROVIDED BY RENTTRACK, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, DATA ACCURACY, TITLE, NON-INFRINGEMENT, NON-INTERFERENCE AND QUIET ENJOYMENT. RENTTRACK DISCLAIMS ANY WARRANTY THAT YOUR USE OF THE API WILL BE UNINTERRUPTED, ERROR FREE, SECURE, TIMELY, COMPLETE, RELIABLE, OR CURRENT. FOR THE AVOIDANCE OF DOUBT, YOU ACKNOWLEDGE AND AGREE THAT THIS AGREEMENT DOES NOT ENTITLE YOU TO ANY SUPPORT FOR THE API. NO ADVICE OR INFORMATION, WHETHER ORAL OR IN WRITING, OBTAINED BY YOU FROM US WILL CREATE ANY WARRANTY NOT EXPRESSLY STATED IN THIS AGREEMENT.
+
+14. Limitation of Liability
+YOU EXPRESSLY ACKNOWLEDGE AND AGREE THAT RENTTRACK SHALL NOT, UNDER ANY CIRCUMSTANCES, BE LIABLE TO YOU FOR ANY INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL, EXEMPLARY, OR PUNITIVE DAMAGES ARISING OUT OF OR IN CONNECTION WITH USE OF THE RENTTRACK API, THE SERVICE, THE RENTTRACK CONTENT OR THE RENTTRACK DATA, INCLUDING BUT NOT LIMITED TO, DAMAGES LOST PROFITS, GOODWILL, USE, DATA OR OTHER INTANGIBLE LOSSES WHETHER BASED ON BREACH OF CONTRACT, BREACH OF WARRANTY, TORT (INCLUDING NEGLIGENCE, PRODUCT LIABILITY OR OTHERWISE), OR ANY OTHER PECUNIARY LOSS, WHETHER OR NOT RENTTRACK HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. UNDER NO CIRCUMSTANCES SHALL RENTTRACK BE LIABLE TO YOU FOR ANY AMOUNT.
+
+15. Release and Waiver
+To the maximum extent permitted by applicable law, you hereby release and waive all claims against RentTrack, and its subsidiaries, affiliates, directors, officers, agents, licensors, co-branders or other partners, and employees from any and all liability for claims, damages (actual and/or consequential), costs and expenses (including litigation costs and attorneys’ fees) of every kind and nature, arising from or in any way related to your use of the RentTrack API. If you are a California resident, you expressly waive your rights under California Civil Code 1542, which states, "A general release does not extend to claims which the creditor does not know or suspect to exist in his favor at the time of executing the release, which if known by him must have materially affected his settlement with the debtor." You understand that any fact relating to any matter covered by this release may be found to be other than now believed to be true and you accept and assume the risk of such possible differences in fact. In addition, you expressly waive and relinquish any and all rights and benefits which you may have under any other state or federal statute or common law principle of similar effect, to the fullest extent permitted by law.
+
+16. Indemnification
+You shall indemnify, defend and hold harmless RentTrack and its subsidiaries, affiliates directors, officers, employees, successors and assigns from and against any and all judgments, settlements, damages, penalties, costs and expenses (including, but not limited to, reasonable attorneys’ fees) arising out of any third party claim relating to your breach or alleged breach of this Agreement.
+
+17. Confidential Information
+"Confidential Information" includes all information provided by RentTrack to you under these this Agreement, including without limitation, Subscriber data (including Personal Data), business plans and processes, and any other information which should be reasonably considered to be confidential in nature. You will not use or disclose Confidential Information other than as required to perform under this Agreement or as otherwise expressly permitted by this Agreement. The parties acknowledge that monetary damages may not be a sufficient remedy for unauthorized use or disclosure of Confidential Information and that RentTrack will be entitled (without waiving any other rights or remedies) to such injunctive or equitable relief as may be deemed proper by a court of competent jurisdiction, without obligation to post any bond. Any information provided by you to RentTrack hereunder is considered by RentTrack to be non-confidential. RentTrack has no duty, express or implied, to pay any compensation for the disclosure or use of any such information provided by you to RentTrack. You acknowledge and agree that any information you provide to RentTrack is solely considered a business relationship under this Agreement and you have no expectation of payment.
+
+18. Publicity
+You may promote your Application, including talking to traditional and online media and your users about your Application, so long as you do so truthfully and without implying that your Application is created or endorsed by RentTrack. You may not issue any formal press release relating to this Agreement or your relationship with RentTrack without RentTrack’s prior written consent. RentTrack reserves the right to issue publicity and promotional materials mentioning and/or describing your Application without your consent.
+
+19. Privacy Policy
+By using our API, you are indicating that you’ve read the RentTrack Privacy Policy and agree to its terms. RentTrack may use information in accordance with the RentTrack Privacy Policy. Without limitation, you acknowledge and agree that RentTrack may process your data, including Personal Data of your representatives, for the purpose of performing the Agreement and providing the API and related functions, such as billing and support, as well as to send direct marketing communications to your representatives, data science, aggregation or anonymization, product or service improvement and reporting, and other purposes set out in the RentTrack Privacy Policy. You represent and warrant that you are authorized to process your data and make such data available to RentTrack or its customers for uses as set out in this Agreement and the RentTrack Privacy Policy, including through appropriate notice, disclosures, consent and by your referring individuals to our Privacy Policy (notwithstanding RentTrack’s ability and right, to which you agree, to request consent, and provide notice and its Privacy Policy separately to individuals).
+
+Unless specifically agreed in writing between you and us, in relation to data, you acknowledge and agree that you act as an independent controller (i.e., not as a processor to us), without prejudice to any use or licensing restriction or condition under the Agreement. You are solely responsible for ensuring that any contractual arrangements required by applicable law are in place, including with API developers, including any relevant data processing and transfer agreement (including where relevant appropriate standard contractual clauses) between (i) a RentTrack Subscriber and you (where you are a third party developer), or (ii) a third party developer and you (where you are a RentTrack Subscriber), and that we may freely deny or revoke access to the API if you do not do so. You represent and warrant that the Subscriber consents to the disclosure and processing of Personal Data relating to it or its representatives and End Users (as defined in the RentTrack Privacy Policy).
+
+20. Onward Transfer of Personal Data
+
+You agree to (i) use and disclose any Personal Data you receive from RentTrack only for limited and specified purposes that comply with this Agreement and that are consistent with the consent provided by the individual; (ii) provide an equal or greater level of protection for the Personal Data as described in the Standard Contractual Clauses, including appropriate technical and organizational measures to protect Personal Data against accidental or unlawful destruction or accidental loss, alteration, unauthorized disclosure or access; (iii) notify RentTrack if you can no longer meet your obligations under section (ii) of this sentence and, upon notice, cease processing or take reasonable and appropriate steps to stop and remediate unauthorized processing of Personal Data; and (iv) assist RentTrack in responding to: (a) lawful requests by public authorities, including to meet national security or law enforcement requirements; and (b) individuals exercising their rights under the Standard Contractual Clauses.
+
+21. Records and Audit Rights
+RentTrack shall have the right to audit your compliance with copyright, Confidential Information, and any other restrictions and/or obligations in this Agreement.
+
+22. General Terms
+
+A. Relationship of the Parties. For all purposes of this Agreement, you and RentTrack shall be and act independently and not as partners, joint ventures, agents, employees or employers of the other. You shall not have any authority to assume or create any obligation for or on behalf of RentTrack, express or implied, and you shall not attempt to bind RentTrack to any contract.
+B. Severability. If any court of competent jurisdiction finds any provision of this Agreement unenforceable, such provision will be changed and interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable law and the remainder of this Agreement will continue in full force and effect.
+
+C. Governing Law; Dispute. This Agreement will be governed by the laws of the State of Delaware, U.S.A., without giving effect to any principles that would provide for the application of the laws of any other jurisdiction. You and RentTrack agree to submit to the personal jurisdiction of the courts located within the county of Santa Barbara, California. Notwithstanding the foregoing, you agree that RentTrack may, at any time, apply for injunctive remedies (or an equivalent type of urgent legal relief) in any applicable jurisdiction. You agree that regardless of any statute or law to the contrary, any claim or cause of action you may have arising out of or related to use of the API or the Service or otherwise under this Agreement must be filed within one (1) year after such claim or cause of action arose or you hereby agree to be forever barred from bringing such claim.
+
+D. No Waiver of Rights by RentTrack. RentTrack’s failure to exercise or enforce any right or provision of this Agreement shall not constitute a waiver of such right or provision.
+
+E. Construction. The headings of sections of this Agreement are for convenience only and are not to be used in interpreting this Agreement. As used in this Agreement, the word "including" means "including but not limited to."
+
+F. Entire Agreement. This Agreement constitutes the entire agreement between the parties regarding the subject hereof and supersedes all prior or contemporaneous agreements, understandings, and communication, whether written or oral, relating to such subject matter.
