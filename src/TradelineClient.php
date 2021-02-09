@@ -2,26 +2,27 @@
 
 namespace LevelCredit\Tradeline;
 
-use LevelCredit\LevelCreditApi\Exception\LevelCreditApiException;
-use LevelCredit\LevelCreditApi\LevelCreditApiClient;
-use LevelCredit\LevelCreditApi\Logging\DefaultLogHandler;
-use LevelCredit\LevelCreditApi\Model\Response\AccessTokenResponse;
-use LevelCredit\LevelCreditApi\Model\Response\BaseResponse;
-use LevelCredit\Tradeline\Exception\TradelineClientException;
 use LevelCredit\Tradeline\Exception\TradelineException;
-use LevelCredit\Tradeline\Exception\TradelineResponseException;
-use LevelCredit\Tradeline\Mapping\AuthenticateResponseMapper;
+use LevelCredit\Tradeline\Exception\TradelineInvalidArgumentException;
 use LevelCredit\Tradeline\Model\AuthenticateResponse;
 use LevelCredit\Tradeline\Model\OrderResponse;
 use LevelCredit\Tradeline\Model\PaymentSourceDataRequest;
+use LevelCredit\Tradeline\RequestMediator\RequestMediator;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
+use function count;
+use function preg_match;
+use function sprintf;
+use function trigger_error;
 
 class TradelineClient
 {
-    private const FAILED_STATUS_ENTRY_POINT = 400;
+    private const BACKREPORTING_PRODUCT_CODE = 'LC-BACKREPORT';
+
+    private const BACKREPORTING_PRODUCT_PRICE = 49.95;
+
+    private const EMAIL_FIELD = 'email';
 
     /**
      * @var LoggerInterface
@@ -29,37 +30,22 @@ class TradelineClient
     protected $logger;
 
     /**
-     * @var LevelCreditApiClient
+     * @var RequestMediator
      */
-    protected $apiClient;
-
-    /**
-     * @var string
-     */
-    protected $baseUrl;
-
-    /**
-     * @var string
-     */
-    protected $logLevel = LogLevel::DEBUG;
+    protected $requestHandler;
 
     /**
      * @param string $clientId your levelcredit client_id parameter
      * @param string $clientSecret your levelcredit client_secret parameter
-     * @param string|null $baseUrl by default will be use production levelcredit url
+     * @param string|null $baseUrl by default will be use sandbox levelcredit url
      */
     public function __construct(
         string $clientId = '',
         string $clientSecret = '',
         string $baseUrl = null
     ) {
-        $this->baseUrl = $baseUrl;
-        $this->apiClient = LevelCreditApiClient::create($clientId, $clientSecret)
-            ->addLogHandler(
-                DefaultLogHandler::create($this->getLogger())
-                    ->setLogLevel($this->logLevel)
-            );
-        !$this->baseUrl || $this->apiClient->setBaseUri($this->baseUrl);
+        $this->requestHandler = new RequestMediator($clientId, $clientSecret, $baseUrl);
+        $this->requestHandler->setLogger($this->getLogger());
     }
 
     /**
@@ -78,7 +64,7 @@ class TradelineClient
      */
     public function setBaseUrl(string $baseUrl): self
     {
-        $this->apiClient->setBaseUri($baseUrl);
+        $this->requestHandler->setBaseUri($baseUrl);
 
         return $this;
     }
@@ -90,10 +76,7 @@ class TradelineClient
     public function setLogger(LoggerInterface $logger): self
     {
         $this->logger = $logger;
-
-        $this->apiClient->disableLogHandlers()->addLogHandler(
-            DefaultLogHandler::create($this->logger)->setLogLevel($this->logLevel)
-        );
+        $this->requestHandler->setLogger($logger);
 
         return $this;
     }
@@ -110,58 +93,48 @@ class TradelineClient
      */
     public function authenticate(...$credentials): AuthenticateResponse
     {
-        $this->logger->debug('Authenticate ...');
+        $this->getLogger()->debug('Authenticate ...');
 
         $countArgs = count($credentials);
-        $username = $password = $refreshToken = null;
 
         switch ($countArgs) {
             // on 3 or 1 number of arguments we should get access token by refresh token
             case 3:
-                $this->logger->debug('Authenticate with client_id and client_secret');
+                $this->getLogger()->debug('Authenticate with client_id and client_secret');
 
                 list($clientId, $clientSecret, $refreshToken) = $credentials;
-                $this->apiClient
-                    ->setClientId($clientId)
-                    ->setClientSecret($clientSecret);
-            case 1:
-                $this->logger->debug('Authenticate by refresh_token');
 
-                $refreshToken || list($refreshToken) = $credentials;
-                try {
-                    $response = $this->apiClient->getAccessTokenByRefreshToken($refreshToken);
-                } catch (LevelCreditApiException $e) {
-                    throw new TradelineClientException('Get error on authenticate request: ' . $e->getMessage());
-                }
-                break;
+                return $this->requestHandler->getAccessTokenByRefreshToken($refreshToken, $clientId, $clientSecret);
+            case 1:
+                $this->getLogger()->debug('Authenticate by refresh_token');
+
+                list($refreshToken) = $credentials;
+
+                return $this->requestHandler->getAccessTokenByRefreshToken($refreshToken);
             // on 4 or 2 number of arguments we should get access token by username+password
             case 4:
-                $this->logger->debug('Authenticate with client_id and client_secret');
+                $this->getLogger()->debug('Authenticate with client_id and client_secret');
 
                 list($clientId, $clientSecret, $username, $password) = $credentials;
-                $this->apiClient
-                    ->setClientId($clientId)
-                    ->setClientSecret($clientSecret);
+
+                return $this->requestHandler->getAccessTokenByUsernamePassword(
+                    $username,
+                    $password,
+                    $clientId,
+                    $clientSecret
+                );
             case 2:
-                $this->logger->debug('Authenticate by username+password');
+                $this->getLogger()->debug('Authenticate by username+password');
 
-                ($username && $password) || list($username, $password) = $credentials;
-                try {
-                    $response = $this->apiClient->getAccessTokenByUsernamePassword($username, $password);
-                } catch (LevelCreditApiException $e) {
-                    $this->logger->error('Get error from client on authenticate request: ' . $e->getMessage());
+                list($username, $password) = $credentials;
 
-                    throw new TradelineClientException('Get error on authenticate request: ' . $e->getMessage());
-                }
-                break;
+                return $this->requestHandler->getAccessTokenByUsernamePassword($username, $password);
             default:
                 trigger_error(
                     sprintf('Wrong number of arguments passed to %s', __METHOD__),
                     E_USER_ERROR
                 );
         }
-
-        return $this->processApiAuthenticateResponse($response);
     }
 
     /**
@@ -176,39 +149,32 @@ class TradelineClient
         string $syncDataJson,
         PaymentSourceDataRequest $paymentSourceData
     ): OrderResponse {
-        throw new TradelineClientException('Not implemented yet');
-    }
+        $this->getLogger()->debug('Purchase Backreporting...');
 
-    /**
-     * @param AccessTokenResponse $response
-     * @return AuthenticateResponse
-     * @throws TradelineResponseException
-     */
-    protected function processApiAuthenticateResponse(AccessTokenResponse $response): AuthenticateResponse
-    {
-        if (!$this->isSuccessApiResponse($response)) {
-            $errorMessages = (string)$response->getErrors();
-            $this->logger->error('Authentication failed: ' . $errorMessages);
+        $this->requestHandler->setAccessToken($accessToken);
 
-            throw new TradelineResponseException($errorMessages);
-        }
+        $syncId = $this->requestHandler->createTradelineSync();
+        $this->getLogger()->debug(sprintf('Tradeline Sync with id "%s" created successfully.', $syncId));
 
-        $this->logger->debug('Authentication successful.');
+        $this->requestHandler->addDataToTradelineSync($syncId, $syncDataJson);
+        $this->getLogger()->debug('Tradeline Sync Data added successfully.');
 
-        return AuthenticateResponseMapper::map($response);
-    }
+        $this->requestHandler->startTradelineSync($syncId);
+        $this->getLogger()->debug('Tradeline Sync Data is imported successfully.');
 
-    /**
-     * @param BaseResponse $response
-     * @return bool
-     */
-    protected function isSuccessApiResponse(BaseResponse $response): bool
-    {
-        if ($response->getStatusCode() >= self::FAILED_STATUS_ENTRY_POINT || !$response->getErrors()->isEmpty()) {
-            return false;
-        }
+        $email = $this->getEmailFromSyncDataJson($syncDataJson);
+        $subscriptionResourceUrl = $this->requestHandler->getSubscriptionResourceUrlByUserEmail($email);
+        $this->getLogger()->debug('Subscription resource url was gotten successfully.');
 
-        return true;
+        $orderResponse = $this->requestHandler->payProduct(
+            self::BACKREPORTING_PRODUCT_CODE,
+            self::BACKREPORTING_PRODUCT_PRICE,
+            $subscriptionResourceUrl,
+            $paymentSourceData
+        );
+        $this->getLogger()->debug('Product was payed successfully.');
+
+        return $orderResponse;
     }
 
     /**
@@ -221,8 +187,22 @@ class TradelineClient
         }
 
         $this->logger = new Logger(__CLASS__);
-        $this->logger->pushHandler(new StreamHandler('php://stdout', $this->logLevel));
+        $this->logger->pushHandler(new StreamHandler('php://stdout'));
 
         return $this->logger;
+    }
+
+    /**
+     * @param string $syncDataJson
+     * @return string
+     * @throws TradelineInvalidArgumentException
+     */
+    protected function getEmailFromSyncDataJson(string $syncDataJson): string
+    {
+        if (!preg_match(sprintf('/"%s".?:.?"(.*?)"/i', self::EMAIL_FIELD), $syncDataJson, $matches)) {
+            throw new TradelineInvalidArgumentException('Email should be present in sync data.');
+        }
+
+        return $matches[1];
     }
 }

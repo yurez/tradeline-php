@@ -8,15 +8,17 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="false"
 >
     <php>
         <server name="KERNEL_DIR" value="tests/" />
     </php>
 
     <testsuites>
-        <testsuite name="Tradeline lib Test Suite">
-            <directory>./tests</directory>
+        <testsuite name="Tradeline lib Unit Test Suite">
+            <directory>./tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Tradeline lib Functional Test Suite">
+            <directory>./tests/Functional</directory>
         </testsuite>
     </testsuites>
 </phpunit>

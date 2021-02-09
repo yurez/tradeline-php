@@ -2,21 +2,54 @@
 
 namespace LevelCredit\Tradeline\Tests\Unit;
 
-use LevelCredit\LevelCreditApi\Exception\ClientException;
-use LevelCredit\LevelCreditApi\LevelCreditApiClient;
-use LevelCredit\LevelCreditApi\Model\Response\AccessTokenResponse;
-use LevelCredit\LevelCreditApi\Model\Response\ErrorCollection;
-use LevelCredit\LevelCreditApi\Model\Response\Resource\AccessToken;
-use LevelCredit\Tradeline\Exception\TradelineClientException;
-use LevelCredit\Tradeline\Exception\TradelineResponseException;
+use LevelCredit\Tradeline\Enum\BankAccountType;
+use LevelCredit\Tradeline\Exception\TradelineInvalidArgumentException;
 use LevelCredit\Tradeline\Model\AuthenticateResponse;
+use LevelCredit\Tradeline\Model\OrderResponse;
+use LevelCredit\Tradeline\Model\PaymentSourceDataRequest;
+use LevelCredit\Tradeline\Model\SubModel\BankAccount;
+use LevelCredit\Tradeline\Model\SubModel\PaymentAccountAddress;
+use LevelCredit\Tradeline\RequestMediator\RequestMediator;
 use LevelCredit\Tradeline\Tests\Helper\WriteAttributeExtensionTrait;
 use LevelCredit\Tradeline\TradelineClient;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class TradelineClientTest extends TestCase
 {
     use WriteAttributeExtensionTrait;
+
+    /**
+     * @test
+     */
+    public function shouldSetLoggerForRequestHandlerOnSetLogger(): void
+    {
+        $handlerMock = $this->createMock(RequestMediator::class);
+        $handlerMock
+            ->expects($this->once())
+            ->method('setLogger')
+            ->with($this->isInstanceOf(LoggerInterface::class))
+            ->willReturn($handlerMock);
+
+        $this->setRequestHandler(TradelineClient::create(), $handlerMock)
+            ->setLogger($this->createMock(LoggerInterface::class));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSetBaseUriForRequestHandlerOnSetBaseUrl(): void
+    {
+        $handlerMock = $this->createMock(RequestMediator::class);
+        $handlerMock
+            ->expects($this->once())
+            ->method('setBaseUri')
+            ->with('http://some.base.uri')
+            ->willReturn($handlerMock);
+
+        $this->setRequestHandler(TradelineClient::create(), $handlerMock)
+            ->setBaseUrl('http://some.base.uri');
+    }
 
     /**
      * @test
@@ -40,101 +73,26 @@ class TradelineClientTest extends TestCase
     /**
      * @test
      */
-    public function shouldThrowExceptionWhenGetExceptionFromApiClientOnAuthenticateByRefreshToken(): void
-    {
-        $this->expectException(TradelineClientException::class);
-        $this->expectErrorMessage('Get error on authenticate request: Some error on http request');
-
-        $apiClientMock = $this->createMock(LevelCreditApiClient::class);
-        $apiClientMock
-            ->expects($this->once())
-            ->method('getAccessTokenByRefreshToken')
-            ->willThrowException(new ClientException('Some error on http request'));
-
-        $this->setApiClient(TradelineClient::create(), $apiClientMock)->authenticate('some_refresh_token');
-    }
-
-    /**
-     * @test
-     */
-    public function shouldThrowExceptionWhenGetExceptionFromApiClientOnAuthenticateByUsernamePassword(): void
-    {
-        $this->expectException(TradelineClientException::class);
-        $this->expectErrorMessage('Get error on authenticate request: Some error on http request');
-
-        $apiClientMock = $this->createMock(LevelCreditApiClient::class);
-        $apiClientMock
-            ->expects($this->once())
-            ->method('getAccessTokenByUsernamePassword')
-            ->willThrowException(new ClientException('Some error on http request'));
-
-        $this->setApiClient(TradelineClient::create(), $apiClientMock)
-            ->authenticate('some_username', 'some_password');
-    }
-
-    /**
-     * @test
-     */
     public function shouldGetAccessTokenByClientIdClientSecretRefreshTokenOnAuthenticate(): void
     {
-        $accessTokenMock = $this->createMock(AccessToken::class);
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getAccessToken')
-            ->willReturn('some_access_token');
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getRefreshToken')
-            ->willReturn('some_refresh_token');
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getExpiresIn')
-            ->willReturn(3600);
-
-        $errorCollectionMock = $this->createMock(ErrorCollection::class);
-        $errorCollectionMock
-            ->expects($this->atLeastOnce())
-            ->method('isEmpty')
-            ->willReturn(true);
-
-        $apiResponseMock = $this->createMock(AccessTokenResponse::class);
-        $apiResponseMock
-            ->expects($this->exactly(3))
-            ->method('getResource')
-            ->willReturn($accessTokenMock);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getStatusCode')
-            ->willReturn(200);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getErrors')
-            ->willReturn($errorCollectionMock);
-
-        $apiClientMock = $this->createMock(LevelCreditApiClient::class);
-        $apiClientMock
-            ->expects($this->once())
-            ->method('setClientId')
-            ->with('client_id')
-            ->willReturn($apiClientMock);
-        $apiClientMock
-            ->expects($this->once())
-            ->method('setClientSecret')
-            ->with('client_secret')
-            ->willReturn($apiClientMock);
-        $apiClientMock
+        $handlerMock = $this->createMock(RequestMediator::class);
+        $handlerMock
             ->expects($this->once())
             ->method('getAccessTokenByRefreshToken')
-            ->with('some_refresh_token')
-            ->willReturn($apiResponseMock);
+            ->with(
+                $this->equalTo('some_refresh_token'),
+                $this->equalTo('client_id'),
+                $this->equalTo('client_secret')
+            )
+            ->willReturn(
+                $response = $this->createMock(AuthenticateResponse::class)
+            );
 
-        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
-            ->authenticate('client_id', 'client_secret', 'some_refresh_token');
-
-        $this->assertInstanceOf(AuthenticateResponse::class, $result);
-        $this->assertEquals('some_access_token', $result->getAccessToken());
-        $this->assertEquals('some_refresh_token', $result->getRefreshToken());
-        $this->assertEquals(3600, $result->getExpiresIn());
+        $this->assertSame(
+            $response,
+            $this->setRequestHandler(TradelineClient::create(), $handlerMock)
+                ->authenticate('client_id', 'client_secret', 'some_refresh_token')
+        );
     }
 
     /**
@@ -142,95 +100,24 @@ class TradelineClientTest extends TestCase
      */
     public function shouldGetAccessTokenByRefreshTokenOnAuthenticate(): void
     {
-        $accessTokenMock = $this->createMock(AccessToken::class);
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getAccessToken')
-            ->willReturn('some_access_token');
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getRefreshToken')
-            ->willReturn('some_refresh_token');
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getExpiresIn')
-            ->willReturn(3600);
-
-        $errorCollectionMock = $this->createMock(ErrorCollection::class);
-        $errorCollectionMock
-            ->expects($this->atLeastOnce())
-            ->method('isEmpty')
-            ->willReturn(true);
-
-        $apiResponseMock = $this->createMock(AccessTokenResponse::class);
-        $apiResponseMock
-            ->expects($this->exactly(3))
-            ->method('getResource')
-            ->willReturn($accessTokenMock);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getStatusCode')
-            ->willReturn(200);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getErrors')
-            ->willReturn($errorCollectionMock);
-
-        $apiClientMock = $this->createMock(LevelCreditApiClient::class);
-        $apiClientMock
+        $handlerMock = $this->createMock(RequestMediator::class);
+        $handlerMock
             ->expects($this->once())
             ->method('getAccessTokenByRefreshToken')
-            ->with('some_new_refresh_token')
-            ->willReturn($apiResponseMock);
+            ->with(
+                $this->equalTo('some_refresh_token'),
+                $this->equalTo(null),
+                $this->equalTo(null)
+            )
+            ->willReturn(
+                $response = $this->createMock(AuthenticateResponse::class)
+            );
 
-        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
-            ->authenticate('some_new_refresh_token');
-
-        $this->assertInstanceOf(AuthenticateResponse::class, $result);
-        $this->assertEquals('some_access_token', $result->getAccessToken());
-        $this->assertEquals('some_refresh_token', $result->getRefreshToken());
-        $this->assertEquals(3600, $result->getExpiresIn());
-    }
-
-    /**
-     * @test
-     */
-    public function shouldThrowExceptionOnFailedResponseByRefreshTokenOnAuthenticate(): void
-    {
-        $this->expectException(TradelineResponseException::class);
-        $this->expectErrorMessage('The client credentials are invalid.');
-
-        $errorCollectionMock = $this->createMock(ErrorCollection::class);
-        $errorCollectionMock
-            ->expects($this->never())
-            ->method('isEmpty');
-        $errorCollectionMock
-            ->expects($this->atLeastOnce())
-            ->method('__toString')
-            ->willReturn('The client credentials are invalid.');
-
-        $apiResponseMock = $this->createMock(AccessTokenResponse::class);
-        $apiResponseMock
-            ->expects($this->never())
-            ->method('getResource');
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getStatusCode')
-            ->willReturn(400);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getErrors')
-            ->willReturn($errorCollectionMock);
-
-        $apiClientMock = $this->createMock(LevelCreditApiClient::class);
-        $apiClientMock
-            ->expects($this->once())
-            ->method('getAccessTokenByRefreshToken')
-            ->with('some_new_refresh_token')
-            ->willReturn($apiResponseMock);
-
-        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
-            ->authenticate('some_new_refresh_token');
+        $this->assertSame(
+            $response,
+            $this->setRequestHandler(TradelineClient::create(), $handlerMock)
+                ->authenticate('some_refresh_token')
+        );
     }
 
     /**
@@ -238,64 +125,25 @@ class TradelineClientTest extends TestCase
      */
     public function shouldGetAccessTokenByClientIdClientSecretUsernamePasswordOnAuthenticate(): void
     {
-        $accessTokenMock = $this->createMock(AccessToken::class);
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getAccessToken')
-            ->willReturn('some_access_token');
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getRefreshToken')
-            ->willReturn('some_refresh_token');
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getExpiresIn')
-            ->willReturn(3600);
-
-        $errorCollectionMock = $this->createMock(ErrorCollection::class);
-        $errorCollectionMock
-            ->expects($this->atLeastOnce())
-            ->method('isEmpty')
-            ->willReturn(true);
-
-        $apiResponseMock = $this->createMock(AccessTokenResponse::class);
-        $apiResponseMock
-            ->expects($this->exactly(3))
-            ->method('getResource')
-            ->willReturn($accessTokenMock);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getStatusCode')
-            ->willReturn(200);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getErrors')
-            ->willReturn($errorCollectionMock);
-
-        $apiClientMock = $this->createMock(LevelCreditApiClient::class);
-        $apiClientMock
-            ->expects($this->once())
-            ->method('setClientId')
-            ->with('client_id')
-            ->willReturn($apiClientMock);
-        $apiClientMock
-            ->expects($this->once())
-            ->method('setClientSecret')
-            ->with('client_secret')
-            ->willReturn($apiClientMock);
-        $apiClientMock
+        $handlerMock = $this->createMock(RequestMediator::class);
+        $handlerMock
             ->expects($this->once())
             ->method('getAccessTokenByUsernamePassword')
-            ->with('some_username', 'some_password')
-            ->willReturn($apiResponseMock);
+            ->with(
+                $this->equalTo('some_username'),
+                $this->equalTo('some_password'),
+                $this->equalTo('client_id'),
+                $this->equalTo('client_secret')
+            )
+            ->willReturn(
+                $response = $this->createMock(AuthenticateResponse::class)
+            );
 
-        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
-            ->authenticate('client_id', 'client_secret', 'some_username', 'some_password');
-
-        $this->assertInstanceOf(AuthenticateResponse::class, $result);
-        $this->assertEquals('some_access_token', $result->getAccessToken());
-        $this->assertEquals('some_refresh_token', $result->getRefreshToken());
-        $this->assertEquals(3600, $result->getExpiresIn());
+        $this->assertSame(
+            $response,
+            $this->setRequestHandler(TradelineClient::create(), $handlerMock)
+                ->authenticate('client_id', 'client_secret', 'some_username', 'some_password')
+        );
     }
 
     /**
@@ -303,106 +151,115 @@ class TradelineClientTest extends TestCase
      */
     public function shouldGetAccessTokenByUsernamePasswordOnAuthenticate(): void
     {
-        $accessTokenMock = $this->createMock(AccessToken::class);
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getAccessToken')
-            ->willReturn('some_access_token');
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getRefreshToken')
-            ->willReturn('some_refresh_token');
-        $accessTokenMock
-            ->expects($this->once())
-            ->method('getExpiresIn')
-            ->willReturn(3600);
-
-        $errorCollectionMock = $this->createMock(ErrorCollection::class);
-        $errorCollectionMock
-            ->expects($this->atLeastOnce())
-            ->method('isEmpty')
-            ->willReturn(true);
-
-        $apiResponseMock = $this->createMock(AccessTokenResponse::class);
-        $apiResponseMock
-            ->expects($this->exactly(3))
-            ->method('getResource')
-            ->willReturn($accessTokenMock);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getStatusCode')
-            ->willReturn(200);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getErrors')
-            ->willReturn($errorCollectionMock);
-
-        $apiClientMock = $this->createMock(LevelCreditApiClient::class);
-        $apiClientMock
+        $handlerMock = $this->createMock(RequestMediator::class);
+        $handlerMock
             ->expects($this->once())
             ->method('getAccessTokenByUsernamePassword')
-            ->with('some_username', 'some_password')
-            ->willReturn($apiResponseMock);
+            ->with(
+                $this->equalTo('some_username'),
+                $this->equalTo('some_password'),
+                $this->equalTo(null),
+                $this->equalTo(null)
+            )
+            ->willReturn(
+                $response = $this->createMock(AuthenticateResponse::class)
+            );
 
-        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
-            ->authenticate('some_username', 'some_password');
-
-        $this->assertInstanceOf(AuthenticateResponse::class, $result);
-        $this->assertEquals('some_access_token', $result->getAccessToken());
-        $this->assertEquals('some_refresh_token', $result->getRefreshToken());
-        $this->assertEquals(3600, $result->getExpiresIn());
+        $this->assertSame(
+            $response,
+            $this->setRequestHandler(TradelineClient::create(), $handlerMock)
+                ->authenticate('some_username', 'some_password')
+        );
     }
 
     /**
      * @test
      */
-    public function shouldThrowExceptionOnFailedResponseByUsernamePasswordOnAuthenticate(): void
+    public function shouldThrowExceptionIfSyncDataWithoutEmailOnPurchaseBackreporting(): void
     {
-        $this->expectException(TradelineResponseException::class);
-        $this->expectErrorMessage('The client credentials are invalid.');
+        $this->expectException(TradelineInvalidArgumentException::class);
+        $this->expectExceptionMessage('Email should be present in sync data.');
 
-        $errorCollectionMock = $this->createMock(ErrorCollection::class);
-        $errorCollectionMock
-            ->expects($this->never())
-            ->method('isEmpty');
-        $errorCollectionMock
-            ->expects($this->atLeastOnce())
-            ->method('__toString')
-            ->willReturn('The client credentials are invalid.');
+        $handlerMock = $this->createMock(RequestMediator::class);
 
-        $apiResponseMock = $this->createMock(AccessTokenResponse::class);
-        $apiResponseMock
-            ->expects($this->never())
-            ->method('getResource');
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getStatusCode')
-            ->willReturn(400);
-        $apiResponseMock
-            ->expects($this->atLeastOnce())
-            ->method('getErrors')
-            ->willReturn($errorCollectionMock);
+        $this->setRequestHandler(TradelineClient::create(), $handlerMock)
+            ->purchaseBackreporting(
+                'some_access_token',
+                '{"some":"data"}',
+                PaymentSourceDataRequest::create(
+                    BankAccount::create('holderName', 123678, '0557758', BankAccountType::CHECKING),
+                    PaymentAccountAddress::create('123 Test str.', 'Test City', 'TS', '99999')
+                )
+            );
+    }
 
-        $apiClientMock = $this->createMock(LevelCreditApiClient::class);
-        $apiClientMock
+    /**
+     * @test
+     */
+    public function shouldReturnOrderResponseOnPurchaseBackreporting(): void
+    {
+        $paymentSourceData = PaymentSourceDataRequest::create(
+            BankAccount::create('holderName', 123678, '0557758', BankAccountType::SAVINGS),
+            PaymentAccountAddress::create('123 Test str.', 'Test City', 'TS', '99999')
+        );
+
+        $handlerMock = $this->createMock(RequestMediator::class);
+        $handlerMock
             ->expects($this->once())
-            ->method('getAccessTokenByUsernamePassword')
-            ->with('some_username', 'some_password')
-            ->willReturn($apiResponseMock);
+            ->method('setAccessToken')
+            ->with($this->equalTo('some_access_token'))
+            ->willReturn($handlerMock);
+        $handlerMock
+            ->expects($this->once())
+            ->method('createTradelineSync')
+            ->willReturn(123);
+        $handlerMock
+            ->expects($this->once())
+            ->method('addDataToTradelineSync')
+            ->with(
+                $this->equalTo(123),
+                $this->equalTo('{"some":"data", "email":"email@email.com"}')
+            );
+        $handlerMock
+            ->expects($this->once())
+            ->method('startTradelineSync')
+            ->with($this->equalTo(123));
+        $handlerMock
+            ->expects($this->once())
+            ->method('getSubscriptionResourceUrlByUserEmail')
+            ->with($this->equalTo('email@email.com'))
+            ->willReturn('http://some.url/resource/1');
+        $handlerMock
+            ->expects($this->once())
+            ->method('payProduct')
+            ->with(
+                $this->equalTo('LC-BACKREPORT'),
+                $this->equalTo(49.95),
+                $this->equalTo('http://some.url/resource/1'),
+                $this->equalTo($paymentSourceData)
+            )
+            ->willReturn($orderResponseMock = $this->createMock(OrderResponse::class));
 
-        $result = $this->setApiClient(TradelineClient::create(), $apiClientMock)
-            ->authenticate('some_username', 'some_password');
+        $this->assertSame(
+            $orderResponseMock,
+            $this->setRequestHandler(TradelineClient::create(), $handlerMock)
+                ->purchaseBackreporting(
+                    'some_access_token',
+                    '{"some":"data", "email":"email@email.com"}',
+                    $paymentSourceData
+                )
+        );
     }
 
     /**
      * @param TradelineClient $client
-     * @param LevelCreditApiClient $apiClient
+     * @param RequestMediator $handler
      * @return TradelineClient
      * @throws \ReflectionException
      */
-    protected function setApiClient(TradelineClient $client, LevelCreditApiClient $apiClient): TradelineClient
+    protected function setRequestHandler(TradelineClient $client, RequestMediator $handler): TradelineClient
     {
-        $this->writeAttribute($client, 'apiClient', $apiClient);
+        $this->writeAttribute($client, 'requestHandler', $handler);
 
         return $client;
     }

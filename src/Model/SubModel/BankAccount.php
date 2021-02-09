@@ -48,8 +48,7 @@ class BankAccount extends PaymentAccount
         string $accountNumber,
         string $routingNumber,
         string $bankAccountType
-    ): self
-    {
+    ): self {
         return new static($holderName, $accountNumber, $routingNumber, $bankAccountType);
     }
 

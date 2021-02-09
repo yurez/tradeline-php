@@ -2,6 +2,8 @@
 
 namespace LevelCredit\Tradeline\Model;
 
+use LevelCredit\Tradeline\Enum\OrderStatus;
+
 class OrderResponse
 {
     /**
@@ -15,7 +17,8 @@ class OrderResponse
     protected $referenceId;
 
     /**
-     * @var string PENDING|COMPLETE
+     * @var string
+     * @see OrderStatus
      */
     protected $status;
 
@@ -63,6 +66,7 @@ class OrderResponse
 
     /**
      * @return string
+     * @see OrderStatus
      */
     public function getStatus(): string
     {

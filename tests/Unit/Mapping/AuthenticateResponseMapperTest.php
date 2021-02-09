@@ -1,6 +1,6 @@
 <?php
 
-namespace LevelCredit\Tradeline\Tests\Unit;
+namespace LevelCredit\Tradeline\Tests\Unit\Mapping;
 
 use LevelCredit\LevelCreditApi\Model\Response\AccessTokenResponse;
 use LevelCredit\LevelCreditApi\Model\Response\Resource\AccessToken;
